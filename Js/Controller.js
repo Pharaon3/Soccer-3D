@@ -47,6 +47,8 @@ var currentTeam
 var rectId, currentRectId // 0: none, 1: homeSafe, 2: homeAttack, 3: homeDangerousAttack, -3: awaySafe, -2: awayAttack, -1: awayDangerousAttack;
 var timeSet
 
+var isGoal
+
 function countdown() {
   var interval = setInterval(function () {
     //every 10ms
@@ -115,6 +117,7 @@ function load() {
   homeScore = 0
   awayScore = 0
   timeSet = 0;
+  isGoal = 0
   getMatchJsonData()
   countdown()
 }
@@ -284,6 +287,8 @@ function stepInitialize() {
     resetTrack()
   }
   rectId = currentRectId
+  if(gameState[currentState]['type'] == 'goal')isGoal ++;
+  else isGoal = 0;
 }
 function drawRect() {
   rt = t * 2
@@ -623,6 +628,9 @@ function showState() {
   document.getElementById('ballState').textContent = ''
   document.getElementById('holder').textContent = ''
 
+  // Goal
+  document.getElementById('score-fade-out').setAttribute('opacity', 0);
+
   // Substitution
   document.getElementById('substitutionOut').setAttribute('fill-opacity', 0)
   document.getElementById('substitutionIn').setAttribute('fill-opacity', 0)
@@ -712,12 +720,17 @@ function showState() {
     }
     if(gameState[currentState]['type'] == 'goal'){
       showAction()
-      // document.getElementById('center_rect').setAttribute('fill-opacity', 0.3)
-      // document.getElementById('center_text').textContent = 'GOAL!'
-      // document.getElementById('bottom_rect').setAttribute('fill-opacity', 0.3)
-      // document.getElementById('bottom_rect').setAttribute('height', 40)
-      // document.getElementById('bottom_text').textContent = teamNames[gameState[currentState]['team']]
-    }
+      if(isGoal == 1){
+        document.getElementById('score-fade-out').setAttribute('opacity', 1);
+        if(t < 0.5){
+          if(gameState[currentState]['team'] == 'home') document.getElementById('fade_score').textContent = homeScore - 1 + ' - ' + awayScore
+          if(gameState[currentState]['team'] == 'away') document.getElementById('fade_score').textContent = homeScore + ' - ' + awayScore - 1
+        }
+      }
+      if(isGoal == 2){
+        document.getElementById('score-fade-out').setAttribute('opacity', 1 - t);
+      }
+    }      
     if(gameState[currentState]['type'] == 'substitution'){
       document.getElementById('substitutionOut').setAttribute('fill-opacity', 0.5)
       document.getElementById('substitutionIn').setAttribute('fill-opacity', 0.5)
@@ -798,12 +811,6 @@ function showState() {
     }
     if(gameState[currentState]['type'] == 'shotontarget'){
       showAction()
-      // document.getElementById('center_rect').setAttribute('fill-opacity', 0.3)
-      // document.getElementById('center_text').textContent = gameState[currentState]['name']
-      // document.getElementById('bottom_rect').setAttribute('fill-opacity', 0.3)
-      // document.getElementById('bottom_rect').setAttribute('height', 40)
-      // document.getElementById('bottom_text').textContent = teamNames[gameState[currentState]['team']]
-
       if (gameState[currentState]['team'] == 'home') {
         document.getElementById('homeKickPolygon').style.fill = 'url(#homeKick)'
         if(y2 < hp * 0.3 && x2 > w1 * 0.6) document.getElementById('homeKickPolygon').style.fill = 'url(#homeTopKick)'
@@ -824,12 +831,6 @@ function showState() {
     }
     if(gameState[currentState]['type'] == 'goal_kick'){
       showAction()
-      // document.getElementById('center_rect').setAttribute('fill-opacity', 0.3)
-      // document.getElementById('center_text').textContent = gameState[currentState]['name']
-      // document.getElementById('bottom_rect').setAttribute('fill-opacity', 0.3)
-      // document.getElementById('bottom_rect').setAttribute('height', 40)
-      // document.getElementById('bottom_text').textContent = teamNames[gameState[currentState]['team']]
-
       if (gameState[currentState]['team'] == 'home') {
         document.getElementById('homeKickPolygon').style.fill = 'url(#homeKick)'
         if(y2 < hp * 0.3 && x2 > w1 * 0.6) document.getElementById('homeKickPolygon').style.fill = 'url(#homeTopKick)'
@@ -864,27 +865,9 @@ function showState() {
     }
     if(gameState[currentState]['type'] == 'corner'){
       showAction()
-      // document.getElementById('center_rect').setAttribute('fill-opacity', 0.3)
-      // document.getElementById('center_text').textContent = gameState[currentState]['name']
-      // document.getElementById('bottom_rect').setAttribute('fill-opacity', 0.3)
-      // document.getElementById('bottom_rect').setAttribute('height', 40)
-      // document.getElementById('bottom_text').textContent = teamNames[gameState[currentState]['team']]
-      // if(gameState[currentState]['player']['name']){
-      //   document.getElementById('bottom_rect').setAttribute('height', 70)
-      //   document.getElementById('bottom2_text').textContent = gameState[currentState]['player']['name']
-      // }
     }
     if(gameState[currentState]['type'] == 'offside'){
       showAction()
-      // document.getElementById('center_rect').setAttribute('fill-opacity', 0.3)
-      // document.getElementById('center_text').textContent = gameState[currentState]['name']
-      // document.getElementById('bottom_rect').setAttribute('fill-opacity', 0.3)
-      // document.getElementById('bottom_rect').setAttribute('height', 40)
-      // document.getElementById('bottom_text').textContent = teamNames[gameState[currentState]['team']]
-      // if(gameState[currentState]['player']['name']){
-      //   document.getElementById('bottom_rect').setAttribute('height', 70)
-      //   document.getElementById('bottom2_text').textContent = gameState[currentState]['player']['name']
-      // }
       if(gameState[currentState]['team'] == 'home'){
         document.getElementById('offsideRect').points[1].x = ((x2 * 50) / w1 + 50) * (718 - 232) / 100 + 232
         document.getElementById('offsideRect').points[2].x = ((x2 * 50) / w1 + 50) * (830 - 120) / 100 + 120

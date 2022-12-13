@@ -29,15 +29,25 @@ function getJsonData() {
       // document.getElementById('awayNameLabel').textContent = awayteamname
       teamNames['home'] = hometeamname;
       teamNames['away'] = awayteamname;
+      // hometeamname = 'This team name is longer than 16 characters'
+      if(hometeamname.length > 16){
+        teamNames['home'] = hometeamname.substr(0, 13) + '...';
+      }
+      if(awayteamname.length > 16){
+        teamNames['away'] = awayteamname.substr(0, 13) + '...';
+      }
       document.getElementById('homeTeamName').textContent = teamNames['home']
       document.getElementById('awayTeamName').textContent = teamNames['away']
+      document.getElementById('fade_homeTeamName').textContent = teamNames['home']
+      document.getElementById('fade_awayTeamName').textContent = teamNames['away']
       document.getElementById('period').textContent = match['status']['name']
       // Score Setting
       var result = match['result']
       if (result['home']) homeScore = result['home']
       if (result['away']) awayScore = result['away']
       // document.getElementById('score').textContent = homeScore + ':' + awayScore
-      document.getElementById('score').textContent = homeScore + ' : ' + awayScore
+      document.getElementById('score').textContent = homeScore + ' - ' + awayScore
+      document.getElementById('fade_score').textContent = homeScore + ' - ' + awayScore
 
       var events = data_['events']
       var newEvents = new Array()
