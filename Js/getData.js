@@ -8,7 +8,7 @@ var teamNames = new Array()
 const equals = (a, b) => JSON.stringify(a) === JSON.stringify(b)
 function getJsonData() {
   fetch(
-    'https://lmt.fn.sportradar.com/demolmt/en/Etc:UTC/gismo/match_timelinedelta/37368549',
+    'https://lmt.fn.sportradar.com/demolmt/en/Etc:UTC/gismo/match_timelinedelta/37396555',
   )
     .then((res) => {
       return res.json()

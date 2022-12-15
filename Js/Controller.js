@@ -88,6 +88,7 @@ function countdown() {
         (second % 10)
       ballPosition()
       drawRect()
+      displayState()
       if (x2 == x1 && y2 == y1) {
         bounceBall()
       } else {
@@ -294,40 +295,8 @@ function drawRect() {
   rt = t * 2
   if (rt > 1) rt = 1
   if (gameState[currentState]['team'] == 'home') {
-    document.getElementById('homeLabelLine').style.display = 'block'
-    document.getElementById('awayLabelLine').style.display = 'none'
     document.getElementById('awayStatePolygon').style.fill = 'url(#none)'
-    document.getElementById('awayState').textContent = ' '
-    document.getElementById('homeName').textContent = hometeamname.toUpperCase()
-    document.getElementById('awayName').textContent = ' '
-    // Calculate position
-    // Game State Label ( Attack state + team name y axis position)
-    if ((y2 * 100) / hp < 30) {
-      document.getElementById('homeLabelLine').setAttribute('y1', '493')
-      document.getElementById('homeLabelLine').setAttribute('y2', '523')
-      document.getElementById('homeState').setAttribute('y', '505')
-      document.getElementById('homeName').setAttribute('y', '520')
-    } else if ((y2 * 100) / hp < 70) {
-      document.getElementById('homeLabelLine').setAttribute('y1', '453')
-      document.getElementById('homeLabelLine').setAttribute('y2', '483')
-      document.getElementById('homeState').setAttribute('y', '465')
-      document.getElementById('homeName').setAttribute('y', '480')
-    } else {
-      document.getElementById('homeLabelLine').setAttribute('y1', '493')
-      document.getElementById('homeLabelLine').setAttribute('y2', '523')
-      document.getElementById('homeState').setAttribute('y', '505')
-      document.getElementById('homeName').setAttribute('y', '520')
-    }
     if ((x2 * 50) / w1 + 50 < 50) {
-      // Game State Label ( Attack state + team name y axis position)
-      document.getElementById('homeLabelLine').setAttribute('x1', '385')
-      document.getElementById('homeLabelLine').setAttribute('x2', '385')
-      document.getElementById('homeState').setAttribute('x', '380')
-      document.getElementById('homeName').setAttribute('x', '380')
-        document.getElementById('homeState').textContent = 'Ball Safe'
-        // document.getElementById('ball').setAttribute('href', './media/football green.png')
-        document.getElementById('homeStatePolygon').style.fill =
-          'url(#homeSafe)'
       if (rectId == 0 || rectId == 1) {
         document.getElementById('homeStatePolygon').points[1].x = 440
         document.getElementById('homeStatePolygon').points[2].x = 480
@@ -359,13 +328,6 @@ function drawRect() {
       }
       currentRectId = 1
     } else if ((x2 * 50) / w1 + 50 < 75) {
-      // Game State Label ( Attack state + team name y axis position)
-      document.getElementById('homeLabelLine').setAttribute('x1', '455')
-      document.getElementById('homeLabelLine').setAttribute('x2', '455')
-      document.getElementById('homeState').setAttribute('x', '450')
-      document.getElementById('homeName').setAttribute('x', '450')
-      document.getElementById('homeState').textContent = 'Attacking'
-      // document.getElementById('ball').setAttribute('href', './media/football orange.png')
       document.getElementById('homeStatePolygon').style.fill =
         'url(#homeAttack)'
       currentRectId = 2
@@ -399,16 +361,8 @@ function drawRect() {
           120 + (526 - 120) * rt
       }
     } else {
-      //Dangerous Attack
-      // Game State Label ( Attack state + team name y axis position)
-      document.getElementById('homeLabelLine').setAttribute('x1', '605')
-      document.getElementById('homeLabelLine').setAttribute('x2', '605')
-      document.getElementById('homeState').setAttribute('x', '600')
-      document.getElementById('homeName').setAttribute('x', '600')
       currentRectId = 3
       if (rectId == 0 || rectId == 3) {
-        document.getElementById('homeState').textContent = 'Dangerous Attack'
-        // document.getElementById('ball').setAttribute('href', './media/football red.png')
         document.getElementById('homeStatePolygon').style.fill =
           'url(#homeDangerousAttack)'
         document.getElementById('homeStatePolygon').points[1].x = 614
@@ -416,8 +370,6 @@ function drawRect() {
         document.getElementById('homeStatePolygon').points[3].x = 678
       }
       if (rectId == 1) {
-        document.getElementById('homeState').textContent = 'Dangerous Attack'
-        // document.getElementById('ball').setAttribute('href', './media/football red.png')
         document.getElementById('homeStatePolygon').style.fill =
           'url(#homeDangerousAttack)'
         document.getElementById('homeStatePolygon').points[1].x =
@@ -428,8 +380,6 @@ function drawRect() {
           424 + (678 - 424) * rt
       }
       if (rectId == 2) {
-        document.getElementById('homeState').textContent = 'Dangerous Attack'
-        // document.getElementById('ball').setAttribute('href', './media/football red.png')
         document.getElementById('homeStatePolygon').style.fill =
           'url(#homeDangerousAttack)'
         document.getElementById('homeStatePolygon').points[1].x =
@@ -440,8 +390,6 @@ function drawRect() {
           526 + (678 - 526) * rt
       }
       if (rectId < 0) {
-        document.getElementById('homeState').textContent = 'Dangerous Attack'
-        // document.getElementById('ball').setAttribute('href', './media/football red.png')
         document.getElementById('homeStatePolygon').style.fill =
           'url(#homeDangerousAttack)'
         document.getElementById('homeStatePolygon').points[1].x =
@@ -453,38 +401,8 @@ function drawRect() {
       }
     }
   } else {
-    document.getElementById('homeLabelLine').style.display = 'none'
-    document.getElementById('awayLabelLine').style.display = 'block'
     document.getElementById('homeStatePolygon').style.fill = 'url(#none)'
-    document.getElementById('homeState').textContent = ' '
-    document.getElementById('homeName').textContent = ' '
-    document.getElementById('awayName').textContent = awayteamname.toUpperCase()
-    // Game State Label ( Attack state + team name y axis position)
-    if ((y2 * 100) / hp < 30) {
-      document.getElementById('awayLabelLine').setAttribute('y1', '493')
-      document.getElementById('awayLabelLine').setAttribute('y2', '523')
-      document.getElementById('awayState').setAttribute('y', '505')
-      document.getElementById('awayName').setAttribute('y', '520')
-    } else if ((y2 * 100) / hp < 70) {
-      document.getElementById('awayLabelLine').setAttribute('y1', '453')
-      document.getElementById('awayLabelLine').setAttribute('y2', '483')
-      document.getElementById('awayState').setAttribute('y', '465')
-      document.getElementById('awayName').setAttribute('y', '480')
-    } else {
-      document.getElementById('awayLabelLine').setAttribute('y1', '493')
-      document.getElementById('awayLabelLine').setAttribute('y2', '523')
-      document.getElementById('awayState').setAttribute('y', '505')
-      document.getElementById('awayName').setAttribute('y', '520')
-    }
     if ((x2 * 50) / w1 + 50 < 25) {
-      // Game State Label ( Attack state + team name x axis position)
-      document.getElementById('awayLabelLine').setAttribute('x1', '345')
-      document.getElementById('awayLabelLine').setAttribute('x2', '345')
-      document.getElementById('awayState').setAttribute('x', '350')
-      document.getElementById('awayName').setAttribute('x', '350')
-
-      document.getElementById('awayState').textContent = 'Dangerous Attack'
-      // document.getElementById('ball').setAttribute('href', './media/football red.png')
       currentRectId = -1
       if (rectId == 0 || rectId == -1) {
         document.getElementById('awayStatePolygon').style.fill =
@@ -524,14 +442,6 @@ function drawRect() {
           830 + (272 - 830) * rt
       }
     } else if ((x2 * 50) / w1 + 50 < 50) {
-      // Game State Label ( Attack state + team name x axis position)
-      document.getElementById('awayLabelLine').setAttribute('x1', '495')
-      document.getElementById('awayLabelLine').setAttribute('x2', '495')
-      document.getElementById('awayState').setAttribute('x', '500')
-      document.getElementById('awayName').setAttribute('x', '500')
-
-      document.getElementById('awayState').textContent = 'Attacking'
-      // document.getElementById('ball').setAttribute('href', './media/football orange.png')
       currentRectId = -2
       if (rectId == 0 || rectId == -2) {
         document.getElementById('awayStatePolygon').style.fill =
@@ -571,14 +481,6 @@ function drawRect() {
           830 + (424 - 830) * rt
       }
     } else {
-      // Game State Label ( Attack state + team name x axis position)
-      document.getElementById('awayLabelLine').setAttribute('x1', '545')
-      document.getElementById('awayLabelLine').setAttribute('x2', '545')
-      document.getElementById('awayState').setAttribute('x', '550')
-      document.getElementById('awayName').setAttribute('x', '550')
-
-      document.getElementById('awayState').textContent = 'Ball Safe'
-      // document.getElementById('ball').setAttribute('href', './media/football green.png')
       currentRectId = -3
       if (rectId == 0 || rectId == -3) {
         document.getElementById('awayStatePolygon').style.fill =
@@ -620,7 +522,6 @@ function drawRect() {
     }
   }
 }
-
 function showState() {
   document.getElementById('actionBoard').setAttribute('width', 0)
   document.getElementById('actionBoard').setAttribute('height', 0)
@@ -734,8 +635,8 @@ function showState() {
     if(gameState[currentState]['type'] == 'substitution'){
       document.getElementById('substitutionOut').setAttribute('fill-opacity', 0.5)
       document.getElementById('substitutionIn').setAttribute('fill-opacity', 0.5)
-      if(gameState[currentState]['playerin']['name']) document.getElementById('substitutionInPlayer').textContent = gameState[currentState]['playerin']['name']
-      if(gameState[currentState]['playerout']['name']) document.getElementById('substitutionOutPlayer').textContent = gameState[currentState]['playerout']['name']
+      if(gameState[currentState]['playerin']['name']) document.getElementById('substitutionInPlayer').textContent = gameState[currentState]['playerin']['name'] + ' IN'
+      if(gameState[currentState]['playerout']['name']) document.getElementById('substitutionOutPlayer').textContent = 'OUT ' + gameState[currentState]['playerout']['name']
     }
     if(gameState[currentState]['type'] == 'throwin'){
      showAction()
@@ -896,11 +797,10 @@ function showState() {
     }
   }
   else {
-    document.getElementById('homeStateLabels').style.display = 'block'
-    document.getElementById('awayStateLabels').style.display = 'block'
+    // document.getElementById('homeStateLabels').style.display = 'block'
+    // document.getElementById('awayStateLabels').style.display = 'block'
   }
 }
-
 function remove() {
   document.getElementById('homeStatePolygon').style.fill = 'url(#none)'
   document.getElementById('awayStatePolygon').style.fill = 'url(#none)'
@@ -962,4 +862,57 @@ function showAction() {
     document.getElementById('stateBoardLine').setAttribute('x1', x_b + w2 + topLeft + 15)
     document.getElementById('stateBoardLine').setAttribute('x2', x_b + w2 + topLeft + 15)
   }  
+}
+function displayState() {
+  if (gameState[currentState]['team'] == 'home') {
+    var statePositionX, statePositionY
+    document.getElementById('homeStateLabels').style.display = 'block'
+    document.getElementById('awayStateLabels').style.display = 'none'
+    document.getElementById('homeName').textContent = teamNames['home'].toUpperCase()
+    if ((y2 * 100) / hp < 30) {
+      statePositionY = 500
+    } else if ((y2 * 100) / hp < 70) {
+      statePositionY = 540
+    } else {
+      statePositionY = 500
+    }
+    if ((x2 * 50) / w1 + 50 < 50) {
+      document.getElementById('homeState').textContent = 'Ball Safe'
+      statePositionX = 350
+    } else if ((x2 * 50) / w1 + 50 < 75) {
+      document.getElementById('homeState').textContent = 'Attacking'
+      statePositionX = 550
+    } else {
+      document.getElementById('homeState').textContent = 'Dangerous Attack'
+      statePositionX = 700
+    }
+    document.getElementById('homeStateLabels').setAttribute('transform', 'translate(' + statePositionX + ',' + statePositionY + ')');
+    document.getElementById('homeStateBoard').setAttribute('width', max(document.getElementById('homeName').getBBox().width, document.getElementById('homeState').getBBox().width) + 70);
+    document.getElementById('homeStateBoard').setAttribute('x', - max(document.getElementById('homeName').getBBox().width, document.getElementById('homeState').getBBox().width) - 70);
+  } 
+  else {    
+    var statePositionX, statePositionY
+    document.getElementById('homeStateLabels').style.display = 'none'
+    document.getElementById('awayStateLabels').style.display = 'block'
+    document.getElementById('awayName').textContent = teamNames['away'].toUpperCase()
+    if ((y2 * 100) / hp < 30) {
+      statePositionY = 500
+    } else if ((y2 * 100) / hp < 70) {
+      statePositionY = 540
+    } else {
+      statePositionY = 500
+    }
+    if ((x2 * 50) / w1 + 50 < 25) {
+      document.getElementById('awayState').textContent = 'Dangerous Attack'
+      statePositionX = 200
+    } else if ((x2 * 50) / w1 + 50 < 50) {
+      document.getElementById('awayState').textContent = 'Attacking'
+      statePositionX = 400
+    } else {
+      document.getElementById('awayState').textContent = 'Ball Safe'
+      statePositionX = 550
+    }
+    document.getElementById('awayStateLabels').setAttribute('transform', 'translate(' + statePositionX + ',' + statePositionY + ')');
+    document.getElementById('awayStateBoard').setAttribute('width', max(document.getElementById('awayName').getBBox().width, document.getElementById('awayState').getBBox().width) + 70);
+  }
 }
