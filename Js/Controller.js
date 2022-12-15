@@ -864,55 +864,51 @@ function showAction() {
   }  
 }
 function displayState() {
-  if (gameState[currentState]['team'] == 'home') {
-    var statePositionX, statePositionY
-    document.getElementById('homeStateLabels').style.display = 'block'
-    document.getElementById('awayStateLabels').style.display = 'none'
-    document.getElementById('homeName').textContent = teamNames['home'].toUpperCase()
-    if ((y2 * 100) / hp < 30) {
-      statePositionY = 500
-    } else if ((y2 * 100) / hp < 70) {
-      statePositionY = 540
-    } else {
-      statePositionY = 500
-    }
+  var statePositionX, statePositionY
+  document.getElementById('stateLabels').style.display = 'block'
+  document.getElementById('teamName').textContent = teamNames[gameState[currentState]['team']].toUpperCase()
+  if ((y2 * 100) / hp < 30) {
+    statePositionY = 500
+  } else if ((y2 * 100) / hp < 70) {
+    statePositionY = 540
+  } else {
+    statePositionY = 500
+  }
+  if(gameState[currentState]['team'] == 'home'){
+    document.getElementById('state').setAttribute('text-anchor', 'end')
+    document.getElementById('teamName').setAttribute('text-anchor', 'end')
+    document.getElementById('stateLine').setAttribute('x1', '-10')
+    document.getElementById('stateLine').setAttribute('x2', '-10')
+    document.getElementById('state').setAttribute('x', '-15')
+    document.getElementById('teamName').setAttribute('x', '-15')
     if ((x2 * 50) / w1 + 50 < 50) {
-      document.getElementById('homeState').textContent = 'Ball Safe'
+      document.getElementById('state').textContent = 'Ball Safe'
       statePositionX = 350
     } else if ((x2 * 50) / w1 + 50 < 75) {
-      document.getElementById('homeState').textContent = 'Attacking'
+      document.getElementById('state').textContent = 'Attacking'
       statePositionX = 550
     } else {
-      document.getElementById('homeState').textContent = 'Dangerous Attack'
+      document.getElementById('state').textContent = 'Dangerous Attack'
       statePositionX = 700
     }
-    document.getElementById('homeStateLabels').setAttribute('transform', 'translate(' + statePositionX + ',' + statePositionY + ')');
-    document.getElementById('homeStateBoard').setAttribute('width', max(document.getElementById('homeName').getBBox().width, document.getElementById('homeState').getBBox().width) + 70);
-    document.getElementById('homeStateBoard').setAttribute('x', - max(document.getElementById('homeName').getBBox().width, document.getElementById('homeState').getBBox().width) - 70);
-  } 
-  else {    
-    var statePositionX, statePositionY
-    document.getElementById('homeStateLabels').style.display = 'none'
-    document.getElementById('awayStateLabels').style.display = 'block'
-    document.getElementById('awayName').textContent = teamNames['away'].toUpperCase()
-    if ((y2 * 100) / hp < 30) {
-      statePositionY = 500
-    } else if ((y2 * 100) / hp < 70) {
-      statePositionY = 540
-    } else {
-      statePositionY = 500
-    }
-    if ((x2 * 50) / w1 + 50 < 25) {
-      document.getElementById('awayState').textContent = 'Dangerous Attack'
-      statePositionX = 200
-    } else if ((x2 * 50) / w1 + 50 < 50) {
-      document.getElementById('awayState').textContent = 'Attacking'
-      statePositionX = 400
-    } else {
-      document.getElementById('awayState').textContent = 'Ball Safe'
-      statePositionX = 550
-    }
-    document.getElementById('awayStateLabels').setAttribute('transform', 'translate(' + statePositionX + ',' + statePositionY + ')');
-    document.getElementById('awayStateBoard').setAttribute('width', max(document.getElementById('awayName').getBBox().width, document.getElementById('awayState').getBBox().width) + 70);
   }
+  else {
+    document.getElementById('state').setAttribute('text-anchor', 'start')
+    document.getElementById('teamName').setAttribute('text-anchor', 'start')
+    document.getElementById('stateLine').setAttribute('x1', '10')
+    document.getElementById('stateLine').setAttribute('x2', '10')
+    document.getElementById('state').setAttribute('x', '15')
+    document.getElementById('teamName').setAttribute('x', '15')
+    document.getElementById('state').textContent = 'Ball Safe'
+    statePositionX = 700
+    if ((x2 * 50) / w1 + 50 < 50) {
+      document.getElementById('state').textContent = 'Attacking'
+      statePositionX = 550
+    } 
+    if ((x2 * 50) / w1 + 50 < 25) {
+      document.getElementById('state').textContent = 'Dangerous Attack'
+      statePositionX = 350
+    }
+  }
+  document.getElementById('stateLabels').setAttribute('transform', 'translate(' + statePositionX + ',' + statePositionY + ')');
 }
