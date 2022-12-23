@@ -74,32 +74,12 @@ function getJsonData() {
               events1['X'] = 100
               events1['Y'] = 0
               newEvents.push(events1)
-              // newEvents.push({
-              //   id: event['_id'],
-              //   type: event['type'],
-              //   seconds: event['seconds'],
-              //   X: 100,
-              //   Y: 0,
-              //   team: event['team'],
-              //   side: event['side'],
-              //   name: event['name'],
-              // })
             }
             if (event['team'] == 'away') {
               var events1 = event;
               events1['X'] = 0
               events1['Y'] = 100
               newEvents.push(events1)
-              // newEvents.push({
-              //   id: event['_id'],
-              //   type: event['type'],
-              //   seconds: event['seconds'],
-              //   X: 0,
-              //   Y: 100,
-              //   team: event['team'],
-              //   side: event['side'],
-              //   name: event['name'],
-              // })
             }
           } else if (event['side'] == 'right') {
             if (event['team'] == 'home') {
@@ -107,32 +87,12 @@ function getJsonData() {
               events1['X'] = 100
               events1['Y'] = 100
               newEvents.push(events1)
-              // newEvents.push({
-              //   id: event['_id'],
-              //   type: event['type'],
-              //   seconds: event['seconds'],
-              //   X: 100,
-              //   Y: 100,
-              //   team: event['team'],
-              //   side: event['side'],
-              //   name: event['name'],
-              // })
             }
             if (event['team'] == 'away') {
               var events1 = event;
               events1['X'] = 0
               events1['Y'] = 0
               newEvents.push(events1)
-              // newEvents.push({
-              //   id: event['_id'],
-              //   type: event['type'],
-              //   seconds: event['seconds'],
-              //   X: 0,
-              //   Y: 0,
-              //   team: event['team'],
-              //   side: event['side'],
-              //   name: event['name'],
-              // })
             }
           } else
             newEvents.push(event)
@@ -143,64 +103,14 @@ function getJsonData() {
               events1['X'] = 5
               events1['Y'] = 50
               newEvents.push(events1)
-            // newEvents.push({
-            //   id: event['_id'],
-            //   type: event['type'],
-            //   seconds: event['seconds'],
-            //   X: 5,
-            //   Y: 50,
-            //   team: event['team'],
-            //   name: event['name'],
-            // })
           } else if (event['team'] == 'away') {
               var events1 = event;
               events1['X'] = 95
               events1['Y'] = 50
               newEvents.push(events1)
-            // newEvents.push({
-            //   id: event['_id'],
-            //   type: event['type'],
-            //   seconds: event['seconds'],
-            //   X: 95,
-            //   Y: 50,
-            //   team: event['team'],
-            //   name: event['name'],
-            // })
           } else
             newEvents.push(event)
         }
-        // if (event['type'] == 'goal') {
-        //   if (event['team'] == 'home') {
-        //       var events1 = event;
-        //       events1['X'] = 100
-        //       events1['Y'] = 50
-        //       newEvents.push(events1)
-        //     // newEvents.push({
-        //     //   id: event['_id'],
-        //     //   type: event['type'],
-        //     //   seconds: event['seconds'],
-        //     //   X: 100,
-        //     //   Y: 50,
-        //     //   team: event['team'],
-        //     //   name: event['name'],
-        //     // })
-        //   } else if (event['team'] == 'away') {
-        //       var events1 = event;
-        //       events1['X'] = 0
-        //       events1['Y'] = 50
-        //       newEvents.push(events1)
-        //     // newEvents.push({
-        //     //   id: event['_id'],
-        //     //   type: event['type'],
-        //     //   seconds: event['seconds'],
-        //     //   X: 0,
-        //     //   Y: 50,
-        //     //   team: event['team'],
-        //     //   name: event['name'],
-        //     // })
-        //   } else
-        //     newEvents.push(event)
-        // }
         if (event['type'] == 'ballcoordinates') {
           var coordinates = event['coordinates']
           var tmpCoordinate = new Array()

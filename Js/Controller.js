@@ -297,6 +297,7 @@ function drawRect() {
   if (gameState[currentState]['team'] == 'home') {
     document.getElementById('awayStatePolygon').style.fill = 'url(#none)'
     if ((x2 * 50) / w1 + 50 < 50) {
+      document.getElementById('homeStatePolygon').style.fill ='url(#homeSafe)'
       if (rectId == 0 || rectId == 1) {
         document.getElementById('homeStatePolygon').points[1].x = 440
         document.getElementById('homeStatePolygon').points[2].x = 480
@@ -328,8 +329,7 @@ function drawRect() {
       }
       currentRectId = 1
     } else if ((x2 * 50) / w1 + 50 < 75) {
-      document.getElementById('homeStatePolygon').style.fill =
-        'url(#homeAttack)'
+      document.getElementById('homeStatePolygon').style.fill ='url(#homeAttack)'
       currentRectId = 2
       if (rectId == 0 || rectId == 2) {
         document.getElementById('homeStatePolygon').points[1].x = 510
@@ -362,16 +362,13 @@ function drawRect() {
       }
     } else {
       currentRectId = 3
+        document.getElementById('homeStatePolygon').style.fill ='url(#homeDangerousAttack)'
       if (rectId == 0 || rectId == 3) {
-        document.getElementById('homeStatePolygon').style.fill =
-          'url(#homeDangerousAttack)'
         document.getElementById('homeStatePolygon').points[1].x = 614
         document.getElementById('homeStatePolygon').points[2].x = 700
         document.getElementById('homeStatePolygon').points[3].x = 678
       }
       if (rectId == 1) {
-        document.getElementById('homeStatePolygon').style.fill =
-          'url(#homeDangerousAttack)'
         document.getElementById('homeStatePolygon').points[1].x =
           440 + (614 - 440) * rt
         document.getElementById('homeStatePolygon').points[2].x =
@@ -380,8 +377,6 @@ function drawRect() {
           424 + (678 - 424) * rt
       }
       if (rectId == 2) {
-        document.getElementById('homeStatePolygon').style.fill =
-          'url(#homeDangerousAttack)'
         document.getElementById('homeStatePolygon').points[1].x =
           510 + (614 - 510) * rt
         document.getElementById('homeStatePolygon').points[2].x =
@@ -390,8 +385,6 @@ function drawRect() {
           526 + (678 - 526) * rt
       }
       if (rectId < 0) {
-        document.getElementById('homeStatePolygon').style.fill =
-          'url(#homeDangerousAttack)'
         document.getElementById('homeStatePolygon').points[1].x =
           232 + (614 - 232) * rt
         document.getElementById('homeStatePolygon').points[2].x =
@@ -404,9 +397,8 @@ function drawRect() {
     document.getElementById('homeStatePolygon').style.fill = 'url(#none)'
     if ((x2 * 50) / w1 + 50 < 25) {
       currentRectId = -1
+      document.getElementById('awayStatePolygon').style.fill ='url(#awayDangerousAttack)'
       if (rectId == 0 || rectId == -1) {
-        document.getElementById('awayStatePolygon').style.fill =
-          'url(#awayDangerousAttack)'
         document.getElementById('awayStatePolygon').points[1].x = 336
         document.getElementById('awayStatePolygon').points[0].x = 250
         document.getElementById('awayStatePolygon').points[4].x = 272
@@ -443,16 +435,13 @@ function drawRect() {
       }
     } else if ((x2 * 50) / w1 + 50 < 50) {
       currentRectId = -2
+      document.getElementById('awayStatePolygon').style.fill = 'url(#awayAttack)'
       if (rectId == 0 || rectId == -2) {
-        document.getElementById('awayStatePolygon').style.fill =
-          'url(#awayAttack)'
         document.getElementById('awayStatePolygon').points[1].x = 440
         document.getElementById('awayStatePolygon').points[0].x = 400
         document.getElementById('awayStatePolygon').points[4].x = 424
       }
       if (rectId == -1) {
-        document.getElementById('awayStatePolygon').style.fill =
-          'url(#awayAttack)'
         document.getElementById('awayStatePolygon').points[1].x =
           336 + (440 - 336) * rt
         document.getElementById('awayStatePolygon').points[0].x =
@@ -461,8 +450,6 @@ function drawRect() {
           272 + (424 - 272) * rt
       }
       if (rectId == -3) {
-        document.getElementById('awayStatePolygon').style.fill =
-          'url(#awayAttack)'
         document.getElementById('awayStatePolygon').points[1].x =
           510 + (440 - 510) * rt
         document.getElementById('awayStatePolygon').points[0].x =
@@ -471,8 +458,6 @@ function drawRect() {
           526 + (424 - 526) * rt
       }
       if (rectId > 0) {
-        document.getElementById('awayStatePolygon').style.fill =
-          'url(#awayAttack)'
         document.getElementById('awayStatePolygon').points[1].x =
           718 + (440 - 718) * rt
         document.getElementById('awayStatePolygon').points[0].x =
@@ -482,16 +467,13 @@ function drawRect() {
       }
     } else {
       currentRectId = -3
+      document.getElementById('awayStatePolygon').style.fill ='url(#awaySafe)'
       if (rectId == 0 || rectId == -3) {
-        document.getElementById('awayStatePolygon').style.fill =
-          'url(#awaySafe)'
         document.getElementById('awayStatePolygon').points[1].x = 510
         document.getElementById('awayStatePolygon').points[0].x = 470
         document.getElementById('awayStatePolygon').points[4].x = 526
       }
       if (rectId == -2) {
-        document.getElementById('awayStatePolygon').style.fill =
-          'url(#awaySafe)'
         document.getElementById('awayStatePolygon').points[1].x =
           440 + (510 - 440) * rt
         document.getElementById('awayStatePolygon').points[0].x =
@@ -500,8 +482,6 @@ function drawRect() {
           424 + (526 - 424) * rt
       }
       if (rectId == -1) {
-        document.getElementById('awayStatePolygon').style.fill =
-          'url(#awaySafe)'
         document.getElementById('awayStatePolygon').points[1].x =
           336 + (510 - 336) * rt
         document.getElementById('awayStatePolygon').points[0].x =
@@ -510,8 +490,6 @@ function drawRect() {
           272 + (526 - 272) * rt
       }
       if (rectId > 0) {
-        document.getElementById('awayStatePolygon').style.fill =
-          'url(#awaySafe)'
         document.getElementById('awayStatePolygon').points[1].x =
           718 + (510 - 718) * rt
         document.getElementById('awayStatePolygon').points[0].x =
