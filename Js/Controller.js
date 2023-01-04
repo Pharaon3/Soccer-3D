@@ -1,3 +1,5 @@
+var socket;
+
 var currentState = 0
 
 var topLeft = 232,
@@ -55,7 +57,7 @@ function countdown() {
     time += timeInterval
     if (Math.floor(time) % 100 == 0) {
       // every 100ms
-      getJsonData()
+      //getJsonData()
     }
     if (currentState == 0) {
       // This is very at first. Need to initialize the state and wait.
@@ -70,6 +72,7 @@ function countdown() {
       }
     } else {
       // Normal case
+      //if (Math.floor(time) % 900 == 0) {
       if (Math.floor(time) % 900 == 0) {
         //every 500ms
         stepInitialize()
@@ -119,8 +122,29 @@ function load() {
   awayScore = 0
   timeSet = 0;
   isGoal = 0
-  getMatchJsonData()
+
+  const urlParams = new URLSearchParams(window.location.search);
+  const eventId = Number(urlParams.get('eventId'));
+
+  //getMatchJsonData()
   countdown()
+
+	socket=new WebSocket("ws://62.112.8.78:9680");
+	socket.onopen=function(e) {
+		//socket.send(JSON.stringify({r:"authenticate", a:{key:"*******"}}));
+		socket.send(JSON.stringify({r:"subscribe_event", a:{id:eventId}}));
+	};
+
+	socket.onmessage=function(e) {
+		console.log(e.data);
+		var data = JSON.parse(e.data);
+
+		if (data.r == 'event') {
+			// New function added for websocket. Call it.
+			handleEventData(data.d);
+		}
+	};
+
 }
 function bounceBall() {
   tt = t
@@ -297,7 +321,6 @@ function drawRect() {
   if (gameState[currentState]['team'] == 'home') {
     document.getElementById('awayStatePolygon').style.fill = 'url(#none)'
     if ((x2 * 50) / w1 + 50 < 50) {
-      document.getElementById('homeStatePolygon').style.fill ='url(#homeSafe)'
       if (rectId == 0 || rectId == 1) {
         document.getElementById('homeStatePolygon').points[1].x = 440
         document.getElementById('homeStatePolygon').points[2].x = 480
@@ -329,7 +352,8 @@ function drawRect() {
       }
       currentRectId = 1
     } else if ((x2 * 50) / w1 + 50 < 75) {
-      document.getElementById('homeStatePolygon').style.fill ='url(#homeAttack)'
+      document.getElementById('homeStatePolygon').style.fill =
+        'url(#homeAttack)'
       currentRectId = 2
       if (rectId == 0 || rectId == 2) {
         document.getElementById('homeStatePolygon').points[1].x = 510
@@ -362,13 +386,16 @@ function drawRect() {
       }
     } else {
       currentRectId = 3
-        document.getElementById('homeStatePolygon').style.fill ='url(#homeDangerousAttack)'
       if (rectId == 0 || rectId == 3) {
+        document.getElementById('homeStatePolygon').style.fill =
+          'url(#homeDangerousAttack)'
         document.getElementById('homeStatePolygon').points[1].x = 614
         document.getElementById('homeStatePolygon').points[2].x = 700
         document.getElementById('homeStatePolygon').points[3].x = 678
       }
       if (rectId == 1) {
+        document.getElementById('homeStatePolygon').style.fill =
+          'url(#homeDangerousAttack)'
         document.getElementById('homeStatePolygon').points[1].x =
           440 + (614 - 440) * rt
         document.getElementById('homeStatePolygon').points[2].x =
@@ -377,6 +404,8 @@ function drawRect() {
           424 + (678 - 424) * rt
       }
       if (rectId == 2) {
+        document.getElementById('homeStatePolygon').style.fill =
+          'url(#homeDangerousAttack)'
         document.getElementById('homeStatePolygon').points[1].x =
           510 + (614 - 510) * rt
         document.getElementById('homeStatePolygon').points[2].x =
@@ -385,6 +414,8 @@ function drawRect() {
           526 + (678 - 526) * rt
       }
       if (rectId < 0) {
+        document.getElementById('homeStatePolygon').style.fill =
+          'url(#homeDangerousAttack)'
         document.getElementById('homeStatePolygon').points[1].x =
           232 + (614 - 232) * rt
         document.getElementById('homeStatePolygon').points[2].x =
@@ -397,8 +428,9 @@ function drawRect() {
     document.getElementById('homeStatePolygon').style.fill = 'url(#none)'
     if ((x2 * 50) / w1 + 50 < 25) {
       currentRectId = -1
-      document.getElementById('awayStatePolygon').style.fill ='url(#awayDangerousAttack)'
       if (rectId == 0 || rectId == -1) {
+        document.getElementById('awayStatePolygon').style.fill =
+          'url(#awayDangerousAttack)'
         document.getElementById('awayStatePolygon').points[1].x = 336
         document.getElementById('awayStatePolygon').points[0].x = 250
         document.getElementById('awayStatePolygon').points[4].x = 272
@@ -435,13 +467,16 @@ function drawRect() {
       }
     } else if ((x2 * 50) / w1 + 50 < 50) {
       currentRectId = -2
-      document.getElementById('awayStatePolygon').style.fill = 'url(#awayAttack)'
       if (rectId == 0 || rectId == -2) {
+        document.getElementById('awayStatePolygon').style.fill =
+          'url(#awayAttack)'
         document.getElementById('awayStatePolygon').points[1].x = 440
         document.getElementById('awayStatePolygon').points[0].x = 400
         document.getElementById('awayStatePolygon').points[4].x = 424
       }
       if (rectId == -1) {
+        document.getElementById('awayStatePolygon').style.fill =
+          'url(#awayAttack)'
         document.getElementById('awayStatePolygon').points[1].x =
           336 + (440 - 336) * rt
         document.getElementById('awayStatePolygon').points[0].x =
@@ -450,6 +485,8 @@ function drawRect() {
           272 + (424 - 272) * rt
       }
       if (rectId == -3) {
+        document.getElementById('awayStatePolygon').style.fill =
+          'url(#awayAttack)'
         document.getElementById('awayStatePolygon').points[1].x =
           510 + (440 - 510) * rt
         document.getElementById('awayStatePolygon').points[0].x =
@@ -458,6 +495,8 @@ function drawRect() {
           526 + (424 - 526) * rt
       }
       if (rectId > 0) {
+        document.getElementById('awayStatePolygon').style.fill =
+          'url(#awayAttack)'
         document.getElementById('awayStatePolygon').points[1].x =
           718 + (440 - 718) * rt
         document.getElementById('awayStatePolygon').points[0].x =
@@ -467,13 +506,16 @@ function drawRect() {
       }
     } else {
       currentRectId = -3
-      document.getElementById('awayStatePolygon').style.fill ='url(#awaySafe)'
       if (rectId == 0 || rectId == -3) {
+        document.getElementById('awayStatePolygon').style.fill =
+          'url(#awaySafe)'
         document.getElementById('awayStatePolygon').points[1].x = 510
         document.getElementById('awayStatePolygon').points[0].x = 470
         document.getElementById('awayStatePolygon').points[4].x = 526
       }
       if (rectId == -2) {
+        document.getElementById('awayStatePolygon').style.fill =
+          'url(#awaySafe)'
         document.getElementById('awayStatePolygon').points[1].x =
           440 + (510 - 440) * rt
         document.getElementById('awayStatePolygon').points[0].x =
@@ -482,6 +524,8 @@ function drawRect() {
           424 + (526 - 424) * rt
       }
       if (rectId == -1) {
+        document.getElementById('awayStatePolygon').style.fill =
+          'url(#awaySafe)'
         document.getElementById('awayStatePolygon').points[1].x =
           336 + (510 - 336) * rt
         document.getElementById('awayStatePolygon').points[0].x =
@@ -490,6 +534,8 @@ function drawRect() {
           272 + (526 - 272) * rt
       }
       if (rectId > 0) {
+        document.getElementById('awayStatePolygon').style.fill =
+          'url(#awaySafe)'
         document.getElementById('awayStatePolygon').points[1].x =
           718 + (510 - 718) * rt
         document.getElementById('awayStatePolygon').points[0].x =
@@ -613,8 +659,8 @@ function showState() {
     if(gameState[currentState]['type'] == 'substitution'){
       document.getElementById('substitutionOut').setAttribute('fill-opacity', 0.5)
       document.getElementById('substitutionIn').setAttribute('fill-opacity', 0.5)
-      if(gameState[currentState]['playerin']['name']) document.getElementById('substitutionInPlayer').textContent = gameState[currentState]['playerin']['name'] + ' IN'
-      if(gameState[currentState]['playerout']['name']) document.getElementById('substitutionOutPlayer').textContent = 'OUT ' + gameState[currentState]['playerout']['name']
+      if(gameState[currentState]['playerin']['name']) document.getElementById('substitutionInPlayer').textContent = gameState[currentState]['playerin']['name']
+      if(gameState[currentState]['playerout']['name']) document.getElementById('substitutionOutPlayer').textContent = gameState[currentState]['playerout']['name']
     }
     if(gameState[currentState]['type'] == 'throwin'){
      showAction()
@@ -842,51 +888,55 @@ function showAction() {
   }  
 }
 function displayState() {
-  var statePositionX, statePositionY
-  document.getElementById('stateLabels').style.display = 'block'
-  document.getElementById('teamName').textContent = teamNames[gameState[currentState]['team']].toUpperCase()
-  if ((y2 * 100) / hp < 30) {
-    statePositionY = 500
-  } else if ((y2 * 100) / hp < 70) {
-    statePositionY = 540
-  } else {
-    statePositionY = 500
-  }
-  if(gameState[currentState]['team'] == 'home'){
-    document.getElementById('state').setAttribute('text-anchor', 'end')
-    document.getElementById('teamName').setAttribute('text-anchor', 'end')
-    document.getElementById('stateLine').setAttribute('x1', '-10')
-    document.getElementById('stateLine').setAttribute('x2', '-10')
-    document.getElementById('state').setAttribute('x', '-15')
-    document.getElementById('teamName').setAttribute('x', '-15')
+  if (gameState[currentState]['team'] == 'home') {
+    var statePositionX, statePositionY
+    document.getElementById('homeStateLabels').style.display = 'block'
+    document.getElementById('awayStateLabels').style.display = 'none'
+    document.getElementById('homeName').textContent = teamNames['home'].toUpperCase()
+    if ((y2 * 100) / hp < 30) {
+      statePositionY = 500
+    } else if ((y2 * 100) / hp < 70) {
+      statePositionY = 540
+    } else {
+      statePositionY = 500
+    }
     if ((x2 * 50) / w1 + 50 < 50) {
-      document.getElementById('state').textContent = 'Ball Safe'
+      document.getElementById('homeState').textContent = 'Ball Safe'
       statePositionX = 350
     } else if ((x2 * 50) / w1 + 50 < 75) {
-      document.getElementById('state').textContent = 'Attacking'
+      document.getElementById('homeState').textContent = 'Attacking'
       statePositionX = 550
     } else {
-      document.getElementById('state').textContent = 'Dangerous Attack'
+      document.getElementById('homeState').textContent = 'Dangerous Attack'
       statePositionX = 700
     }
-  }
-  else {
-    document.getElementById('state').setAttribute('text-anchor', 'start')
-    document.getElementById('teamName').setAttribute('text-anchor', 'start')
-    document.getElementById('stateLine').setAttribute('x1', '10')
-    document.getElementById('stateLine').setAttribute('x2', '10')
-    document.getElementById('state').setAttribute('x', '15')
-    document.getElementById('teamName').setAttribute('x', '15')
-    document.getElementById('state').textContent = 'Ball Safe'
-    statePositionX = 700
-    if ((x2 * 50) / w1 + 50 < 50) {
-      document.getElementById('state').textContent = 'Attacking'
-      statePositionX = 550
-    } 
-    if ((x2 * 50) / w1 + 50 < 25) {
-      document.getElementById('state').textContent = 'Dangerous Attack'
-      statePositionX = 350
+    document.getElementById('homeStateLabels').setAttribute('transform', 'translate(' + statePositionX + ',' + statePositionY + ')');
+    document.getElementById('homeStateBoard').setAttribute('width', max(document.getElementById('homeName').getBBox().width, document.getElementById('homeState').getBBox().width) + 70);
+    document.getElementById('homeStateBoard').setAttribute('x', - max(document.getElementById('homeName').getBBox().width, document.getElementById('homeState').getBBox().width) - 70);
+  } 
+  else {    
+    var statePositionX, statePositionY
+    document.getElementById('homeStateLabels').style.display = 'none'
+    document.getElementById('awayStateLabels').style.display = 'block'
+    document.getElementById('awayName').textContent = teamNames['away'].toUpperCase()
+    if ((y2 * 100) / hp < 30) {
+      statePositionY = 500
+    } else if ((y2 * 100) / hp < 70) {
+      statePositionY = 540
+    } else {
+      statePositionY = 500
     }
+    if ((x2 * 50) / w1 + 50 < 25) {
+      document.getElementById('awayState').textContent = 'Dangerous Attack'
+      statePositionX = 200
+    } else if ((x2 * 50) / w1 + 50 < 50) {
+      document.getElementById('awayState').textContent = 'Attacking'
+      statePositionX = 400
+    } else {
+      document.getElementById('awayState').textContent = 'Ball Safe'
+      statePositionX = 550
+    }
+    document.getElementById('awayStateLabels').setAttribute('transform', 'translate(' + statePositionX + ',' + statePositionY + ')');
+    document.getElementById('awayStateBoard').setAttribute('width', max(document.getElementById('awayName').getBBox().width, document.getElementById('awayState').getBBox().width) + 70);
   }
-  document.getElementById('stateLabels').setAttribute('transform', 'translate(' + statePositionX + ',' + statePositionY + ')');
 }
