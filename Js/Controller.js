@@ -2,6 +2,10 @@ var socket;
 
 var currentState = 0
 
+var updated_uts1 = 0, updated_uts = 0
+var currentTime, matchStartDate;
+var ptime, setTimer, stopTime = 0
+
 var topLeft = 232,
   topPosition = 448
 var pitchX = 710,
@@ -53,6 +57,34 @@ var isGoal
 
 function countdown() {
   var interval = setInterval(function () {
+    const currentDate = new Date;
+    updated_uts += timeInterval / 1000
+    if(setTimer) currentTime = updated_uts
+    else currentTime = stopTime
+    // var seconds = Math.floor(updated_uts / 1000)
+    var seconds1 = Math.floor(currentTime)
+    var minute1 = Math.floor(seconds1 / 60)
+    var second1 = seconds1 % 60
+    console.log('seconds1: ', seconds1)
+    document.getElementById('time').textContent =
+      Math.floor(minute1 / 10) +
+      '' +
+      (minute1 % 10) +
+      ':' +
+      Math.floor(second1 / 10) +
+      '' +
+      (second1 % 10)
+    if(matchStartDate){
+      var seconds = Math.floor((matchStartDate - currentDate.getTime()) / 1000)
+      var second = seconds % 60
+      var minutes = Math.floor(seconds / 60)
+      var minute = minutes % 60
+      var hours = Math.floor(minutes / 60)
+      var hour = hours % 24
+      var days = Math.floor(hours / 24)
+      setCenterFrame('Not Started', days + 'D ' + hour + 'H ' + minute + 'M ' + second + 'S')
+    }
+
     //every 10ms
     time += timeInterval
     if (currentState == 0) {
@@ -64,17 +96,6 @@ function countdown() {
         stepInitialize()
       }
       t += 1 / 91
-      var seconds = Math.floor(time / 1000)
-      var minute = Math.floor(seconds / 60)
-      var second = seconds % 60
-      document.getElementById('time').textContent =
-        Math.floor(minute / 10) +
-        '' +
-        (minute % 10) +
-        ':' +
-        Math.floor(second / 10) +
-        '' +
-        (second % 10)
       ballPosition()
       drawRect()
       displayState()
@@ -122,7 +143,6 @@ function load() {
 	};
 
 	socket.onmessage=function(e) {
-		console.log(e.data);
 		var data = JSON.parse(e.data);
 
 		if (data.r == 'event') {
@@ -566,68 +586,10 @@ function showState() {
     remove()
     if(gameState[currentState]['team'])showAction()
     if(gameState[currentState]['name'] == 'Yellow card'){
-      showAction()
-      document.getElementById('ballState').textContent = gameState[currentState]['name']
-      document.getElementById('holder').textContent = teamNames[gameState[currentState]['team']].toUpperCase()
-      var rectWidth = document.getElementById('ballState').getBBox().width;
-      rectWidth = max(rectWidth, document.getElementById('holder').getBBox().width) + 20
-      document.getElementById('actionBoard').setAttribute('width', rectWidth + 50)
-      document.getElementById('actionBoard').setAttribute('height', 50)
-      document.getElementById('actionBoard').setAttribute('x', x_b + w2 + topLeft - rectWidth - 10 - 50)
-      document.getElementById('actionBoard').setAttribute('y', y_b + topPosition - 50 - 10)
-
-      document.getElementById('cardBoard').setAttribute('width', 30)
-      document.getElementById('cardBoard').setAttribute('height', 50)
-      document.getElementById('cardBoard').setAttribute('x', x_b + w2 + topLeft - rectWidth - 10)
-      document.getElementById('cardBoard').setAttribute('y', y_b + topPosition - 50 - 10)
-      document.getElementById('cardBoard').style.fill = 'url(#ff0)'
-
-      document.getElementById('holder').setAttribute('x', x_b + w2 + topLeft - 20 - 50)
-      document.getElementById('holder').setAttribute('y', y_b + topPosition - 12 - 5)
-      document.getElementById('ballState').setAttribute('x', x_b + w2 + topLeft - 20 - 50)
-      document.getElementById('ballState').setAttribute('y', y_b + topPosition - 37 - 5)
-      document.getElementById('stateBoardLine').setAttribute('stroke-opacity', 0.9)
-      document.getElementById('stateBoardLine').setAttribute('x1', x_b + w2 + topLeft - 15)
-      document.getElementById('stateBoardLine').setAttribute('x2', x_b + w2 + topLeft - 15)
-      document.getElementById('stateBoardLine').setAttribute('y1', y_b + topPosition - 50 - 5)
-      document.getElementById('stateBoardLine').setAttribute('y2', y_b + topPosition - 15)
-      // document.getElementById('stateBoardLine').setAttribute('stroke-opacity', 0)
-      // document.getElementById('bottom_rect').setAttribute('fill-opacity', 0.3)
-      // document.getElementById('bottom_rect').setAttribute('height', 70)
-      // document.getElementById('bottom_text').textContent = teamNames[gameState[currentState]['team']]
-      // document.getElementById('bottom2_text').textContent = gameState[currentState]['player']['name']
+      setCenterFrame(gameState[currentState]['name'], teamNames[gameState[currentState]['team']])
     }
     if(gameState[currentState]['name'] == 'Red card'){
-      showAction()
-      document.getElementById('ballState').textContent = gameState[currentState]['name']
-      document.getElementById('holder').textContent = teamNames[gameState[currentState]['team']].toUpperCase()
-      var rectWidth = document.getElementById('ballState').getBBox().width;
-      rectWidth = max(rectWidth, document.getElementById('holder').getBBox().width) + 20
-      document.getElementById('actionBoard').setAttribute('width', rectWidth + 50)
-      document.getElementById('actionBoard').setAttribute('height', 50)
-      document.getElementById('actionBoard').setAttribute('x', x_b + w2 + topLeft - rectWidth - 10 - 50)
-      document.getElementById('actionBoard').setAttribute('y', y_b + topPosition - 50 - 10)
-
-      document.getElementById('cardBoard').setAttribute('width', 30)
-      document.getElementById('cardBoard').setAttribute('height', 50)
-      document.getElementById('cardBoard').setAttribute('x', x_b + w2 + topLeft - rectWidth - 10)
-      document.getElementById('cardBoard').setAttribute('y', y_b + topPosition - 50 - 10)
-      document.getElementById('cardBoard').style.fill = 'url(#f00)'
-
-      document.getElementById('holder').setAttribute('x', x_b + w2 + topLeft - 20 - 50)
-      document.getElementById('holder').setAttribute('y', y_b + topPosition - 12 - 5)
-      document.getElementById('ballState').setAttribute('x', x_b + w2 + topLeft - 20 - 50)
-      document.getElementById('ballState').setAttribute('y', y_b + topPosition - 37 - 5)
-      document.getElementById('stateBoardLine').setAttribute('stroke-opacity', 0.9)
-      document.getElementById('stateBoardLine').setAttribute('x1', x_b + w2 + topLeft - 15)
-      document.getElementById('stateBoardLine').setAttribute('x2', x_b + w2 + topLeft - 15)
-      document.getElementById('stateBoardLine').setAttribute('y1', y_b + topPosition - 50 - 5)
-      document.getElementById('stateBoardLine').setAttribute('y2', y_b + topPosition - 15)
-      // document.getElementById('redCard').style.display = 'block'
-      // document.getElementById('bottom_rect').setAttribute('fill-opacity', 0.3)
-      // document.getElementById('bottom_rect').setAttribute('height', 70)
-      // document.getElementById('bottom_text').textContent = teamNames[gameState[currentState]['team']]
-      // document.getElementById('bottom2_text').textContent = gameState[currentState]['player']['name']
+      setCenterFrame(gameState[currentState]['name'], teamNames[gameState[currentState]['team']])
     }
     if(gameState[currentState]['type'] == 'goal'){
       showAction()
@@ -663,7 +625,8 @@ function showState() {
         document.getElementById('homeKickPolygon').points[0].x =
           x_b + w2 + topLeft
         document.getElementById('homeKickPolygon').points[0].y = y_b + topPosition
-        document.getElementById('homeState').textContent = gameState[currentState]['name']
+        center_text = capitalizeWords(gameState[currentState]['name'].split(" ")).join('')
+        document.getElementById('homeState').textContent = center_text
       } else {
         document.getElementById('awayKickPolygon').style.fill = 'url(#awayKick)'
         if(y2 < hp * 0.3 && x2 < - w1 * 0.3) document.getElementById('awayKickPolygon').style.fill = 'url(#awayTopKick)'
@@ -671,7 +634,8 @@ function showState() {
         document.getElementById('awayKickPolygon').points[0].x =
           x_b + w2 + topLeft
         document.getElementById('awayKickPolygon').points[0].y = y_b + topPosition
-        document.getElementById('awayState').textContent = gameState[currentState]['name']
+        center_text = capitalizeWords(gameState[currentState]['name'].split(" ")).join('')
+        document.getElementById('awayState').textContent = center_text 
       }
     }
     if(gameState[currentState]['type'] == 'freekick'){
@@ -691,7 +655,8 @@ function showState() {
         document.getElementById('awayKickPolygon').points[0].x =
           x_b + w2 + topLeft
         document.getElementById('awayKickPolygon').points[0].y = y_b + topPosition
-        document.getElementById('awayState').textContent = gameState[currentState]['name']
+        center_text = capitalizeWords(gameState[currentState]['name'].split(" ")).join('')
+        document.getElementById('awayState').textContent = center_text 
       }
     }
     if(gameState[currentState]['type'] == 'shotofftarget'){
@@ -717,7 +682,8 @@ function showState() {
         document.getElementById('awayKickPolygon').points[0].x =
           x_b + w2 + topLeft
         document.getElementById('awayKickPolygon').points[0].y = y_b + topPosition
-        document.getElementById('awayState').textContent = gameState[currentState]['name']
+        center_text = capitalizeWords(gameState[currentState]['name'].split(" ")).join('')
+        document.getElementById('awayState').textContent = center_text 
       }
     }
     if(gameState[currentState]['type'] == 'shotontarget'){
@@ -737,7 +703,8 @@ function showState() {
         document.getElementById('awayKickPolygon').points[0].x =
           x_b + w2 + topLeft
         document.getElementById('awayKickPolygon').points[0].y = y_b + topPosition
-        document.getElementById('awayState').textContent = gameState[currentState]['name']
+        center_text = capitalizeWords(gameState[currentState]['name'].split(" ")).join('')
+        document.getElementById('awayState').textContent = center_text 
       }
     }
     if(gameState[currentState]['type'] == 'goal_kick'){
@@ -757,22 +724,20 @@ function showState() {
         document.getElementById('awayKickPolygon').points[0].x =
           x_b + w2 + topLeft
         document.getElementById('awayKickPolygon').points[0].y = y_b + topPosition
-        document.getElementById('awayState').textContent = gameState[currentState]['name']
+        center_text = capitalizeWords(gameState[currentState]['name'].split(" ")).join('')
+        document.getElementById('awayState').textContent = center_text 
       }
     }
     if(gameState[currentState]['type'] == 'match_ended'){
-      document.getElementById('center_rect').setAttribute('fill-opacity', 0.3)
-      document.getElementById('center_text').textContent = gameState[currentState]['name']
+      setCenterFrame('Match End', homeScore + ':' + awayScore)
     }
     if(gameState[currentState]['type'] == 'periodstart'){
-      document.getElementById('center_rect').setAttribute('fill-opacity', 0.3)
-      document.getElementById('center_text').textContent = gameState[currentState]['name']
       // 
     }
     if(gameState[currentState]['type'] == 'periodscore'){
-      document.getElementById('center_rect').setAttribute('fill-opacity', 0.3)
-      document.getElementById('center_text').textContent = gameState[currentState]['name']
-      // 
+      if(gameState[currentState]['name'] == '1st half'){
+        setCenterFrame('Halftime', homeScore + ':' + awayScore)
+      }
     }
     if(gameState[currentState]['type'] == 'corner'){
       showAction()
@@ -795,15 +760,7 @@ function showState() {
       document.getElementById('center_text').textContent = 'Injury time: ' + gameState[currentState]['minutes'] + 'mins'
     }
     if(gameState[currentState]['type'] == 'injury'){
-      document.getElementById('center_rect').setAttribute('fill-opacity', 0.3)
-      document.getElementById('center_text').textContent = gameState[currentState]['name']
-      document.getElementById('bottom_rect').setAttribute('fill-opacity', 0.3)
-      document.getElementById('bottom_rect').setAttribute('height', 40)
-      document.getElementById('bottom_text').textContent = teamNames[gameState[currentState]['team']]
-      if(gameState[currentState]['player']['name']){
-        document.getElementById('bottom_rect').setAttribute('height', 70)
-        document.getElementById('bottom2_text').textContent = gameState[currentState]['player']['name']
-      }
+      setCenterFrame('injury', teamNames[gameState[currentState]['team']])
     }
   }
   else {
@@ -843,7 +800,8 @@ function mapY(x11, y11) {
   return y_11
 }
 function showAction() {
-  document.getElementById('ballState').textContent = gameState[currentState]['name']
+  center_text = capitalizeWords(gameState[currentState]['name'].split(" ")).join('')
+  document.getElementById('ballState').textContent = center_text
   document.getElementById('holder').textContent = teamNames[gameState[currentState]['team']].toUpperCase()
   var rectWidth = document.getElementById('ballState').getBBox().width;
   rectWidth = max(rectWidth, document.getElementById('holder').getBBox().width) + 20
@@ -926,6 +884,43 @@ function displayState() {
     document.getElementById('awayStateBoard').setAttribute('width', max(document.getElementById('awayName').getBBox().width, document.getElementById('awayState').getBBox().width) + 70);
   }
 }
+function capitalizeWords(arr) {
+  return arr.map(word => {
+    const firstLetter = word.charAt(0).toUpperCase();
+    const rest = word.slice(1).toLowerCase();
+
+    return firstLetter + rest;
+  });
+}
+function setCenterFrame(title, content) {
+  document.getElementById('ballState').textContent = ''
+  document.getElementById('actionBoard').setAttribute('height', 0)
+    document.getElementById('stateBoardLine').setAttribute('stroke-opacity', 0)
+  document.getElementById('center_rect').setAttribute('fill-opacity', 0.5)
+  center_text = capitalizeWords(title.split(" ")).join(' ')
+  document.getElementById('center_text').textContent = center_text
+  document.getElementById('center_rect').setAttribute('height', 140)
+  document.getElementById('bottom_text').textContent = content
+  document.getElementById('ball').setAttribute('x', 100000)
+  document.getElementById('ball').setAttribute('y', 100000)
+  document.getElementById('ball_shadow').setAttribute('cx', 100000)
+  document.getElementById('ball_shadow').setAttribute('cy', 100000)
+}
+function setSideFrame() {
+  // body...
+}
+function setStateFrame() {
+  // body...
+}
+
+function capitalizeWords(arr) {
+  return arr.map(word => {
+    const firstLetter = word.charAt(0).toUpperCase();
+    const rest = word.slice(1).toLowerCase();
+
+    return firstLetter + rest;
+  });
+}
 
 
 // Get Data
@@ -946,7 +941,6 @@ function handleEventData(data) {
     data.events   => events (match_timelinedelta)
   */
 
-  console.log(data);
 
   if (data.info) {
     handleInfoData(data);
@@ -955,6 +949,13 @@ function handleEventData(data) {
   var match = data['match']
 
   if (match) {
+    setTimer = true
+    ptime = match['ptime'] * 1000 - 45 * 60 * 1000 * (match['p'] - 1) - 148 * 1000
+    if(match['p'] == 0) setTimer = false
+    if((match['updated_uts'] - match['ptime']) + 45 * 60 * (match['p'] - 1) != updated_uts1) {
+      updated_uts1 = (match['updated_uts'] - match['ptime']) + 45 * 60 * (match['p'] - 1)
+      updated_uts = updated_uts1
+    }
 
   // Team Name Setting
   var teams = match['teams']
@@ -976,12 +977,46 @@ function handleEventData(data) {
   document.getElementById('fade_homeTeamName').textContent = teamNames['home']
   document.getElementById('fade_awayTeamName').textContent = teamNames['away']
   document.getElementById('period').textContent = match['status']['name']
+
+  center_text = capitalizeWords(match['status']['name'].split(" ")).join(' ')
+    document.getElementById('period').textContent = center_text
+    if(match['status']['name'] == 'Halftime') stopTime = 45 * 60;
+    if(match['status']['name'] == 'Not started') {
+      stopTime = 0 * 60;
+      document.getElementById('period').textContent = ''
+      document.getElementById('time').textContent = ''
+    }
+    if(match['status']['name'] == 'Ended') stopTime = 90 * 60;
+
   // Score Setting
   var result = match['result']
   if (result['home']) homeScore = result['home']
   if (result['away']) awayScore = result['away']
   document.getElementById('score').textContent = homeScore + ' - ' + awayScore
   document.getElementById('fade_score').textContent = homeScore + ' - ' + awayScore
+
+    if(match['matchstatus'] == 'upcoming'){ //Match End
+      setCenterFrame('Match End', homeScore + ' : ' + awayScore)
+    }
+
+    if(match['status']['name'] == 'Not started'){ //Match End
+      const currentDate = new Date;
+      upCommingTime = currentDate.getTime() / 1000 - match['updated_uts']
+      // var seconds = Math.floor(updated_uts / 1000)
+      var seconds = Math.floor(upCommingTime)
+      var minute = Math.floor(seconds / 60)
+      var second = seconds % 60
+      // var date = new Date(match['_dt']['date'] + '4:52:48 PM UTC');
+      var matchDate = match['_dt']['date'].split("/")
+      var date = new Date(matchDate[1] + '/' + matchDate[0] + '/20' + matchDate[2] + ' ' + match['_dt']['time'] + ':00 UTC')
+
+      matchStartDate = date.getTime()
+    }
+
+    if(match['p'] == 31) {
+      setTimer = false
+      setCenterFrame('Halftime', homeScore + ':' + awayScore)
+    }
   }
 
   var events = data['events'] || {};
