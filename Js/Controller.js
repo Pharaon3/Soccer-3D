@@ -1202,60 +1202,16 @@ function handleInfoData(data) {
         document.getElementById('state_awayStripes').setAttribute('fill', '#'+ awayPlayerColor);
       }
 }
-
+function min(minArg1, minArg2) {
+  if(minArg1 < minArg2) return minArg1
+  return minArg2
+}
 function changeScreenSize() {
   screenHeight = window.innerHeight
   screenWidth = window.innerWidth
-  console.log('screenWidth: ', screenWidth)
-  console.log('screenHeight: ', screenHeight)
+  scale = min(screenWidth / 750, screenHeight / 430);
 
-  document.getElementById('scale').setAttribute('transform', 'scale(1.5)')
-  document.getElementById('svg').setAttribute('width', 750 * 1.5)
-  document.getElementById('svg').setAttribute('height', 430 * 1.5)
-  if(screenWidth < 1150 || screenHeight < 660){
-    document.getElementById('scale').setAttribute('transform', 'scale(1.3)')
-    document.getElementById('svg').setAttribute('width', 750 * 1.3)
-    document.getElementById('svg').setAttribute('height', 430 * 1.3)
-  } 
-  if(screenWidth < 1000 || screenHeight < 570){
-    document.getElementById('scale').setAttribute('transform', 'scale(1.1)')
-    document.getElementById('svg').setAttribute('width', 750 * 1.1)
-    document.getElementById('svg').setAttribute('height', 430 * 1.1)
-  } 
-  if(screenWidth < 850 || screenHeight < 480){
-    document.getElementById('scale').setAttribute('transform', 'scale(1)')
-    document.getElementById('svg').setAttribute('width', 750 * 1)
-    document.getElementById('svg').setAttribute('height', 430 * 1)
-  } 
-  if(screenWidth < 780 || screenHeight < 450){
-    document.getElementById('scale').setAttribute('transform', 'scale(0.8)')
-    document.getElementById('svg').setAttribute('width', 750 * 0.8)
-    document.getElementById('svg').setAttribute('height', 430 * 0.8)
-  } 
-  if(screenWidth < 620 || screenHeight < 350){
-    document.getElementById('scale').setAttribute('transform', 'scale(0.6)')
-    document.getElementById('svg').setAttribute('width', 750 * 0.6)
-    document.getElementById('svg').setAttribute('height', 430 * 0.6)
-  } 
-  if(screenWidth < 470 || screenHeight < 280){
-    document.getElementById('scale').setAttribute('transform', 'scale(0.5)')
-    document.getElementById('svg').setAttribute('width', 750 * 0.5)
-    document.getElementById('svg').setAttribute('height', 430 * 0.5)
-  } 
-  if(screenWidth < 400 || screenHeight < 230){
-    document.getElementById('scale').setAttribute('transform', 'scale(0.4)')
-    document.getElementById('svg').setAttribute('width', 750 * 0.4)
-    document.getElementById('svg').setAttribute('height', 430 * 0.4)
-  } 
-  if(screenWidth < 320 || screenHeight < 190){
-    document.getElementById('scale').setAttribute('transform', 'scale(0.3)')
-    document.getElementById('svg').setAttribute('width', 750 * 0.3)
-    document.getElementById('svg').setAttribute('height', 430 * 0.3)
-  } 
-  if(screenWidth < 250 || screenHeight < 150){
-    document.getElementById('scale').setAttribute('transform', 'scale(0.2)')
-    document.getElementById('svg').setAttribute('width', 750 * 0.2)
-    document.getElementById('svg').setAttribute('height', 430 * 0.2)
-  } 
-
+  document.getElementById('scale').setAttribute('transform', 'scale(' + scale + ')')
+  document.getElementById('svg').setAttribute('width', 750 * scale)
+  document.getElementById('svg').setAttribute('height', 430 * scale)
 }
