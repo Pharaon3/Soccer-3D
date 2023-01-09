@@ -57,6 +57,7 @@ var isGoal
 
 function countdown() {
   var interval = setInterval(function () {
+    changeScreenSize()
     const currentDate = new Date;
     updated_uts += timeInterval / 1000
     if(setTimer) currentTime = updated_uts
@@ -269,7 +270,7 @@ function stepInitialize() {
   x1 = x2
   y1 = y2
   if (currentState < gameState.length - 1) {
-    currentState++
+    currentState = max(currentState + 1, gameState.length - 10)
     if (gameState[currentState]['X'] > -1) {
       x2 = ((gameState[currentState]['X'] - 50) * w1) / 50
       y2 = (gameState[currentState]['Y'] * hp) / 100
@@ -957,45 +958,45 @@ function handleEventData(data) {
       updated_uts = updated_uts1
     }
 
-  // Team Name Setting
-  var teams = match['teams']
-  var hometeam = teams['home']
-  if (hometeam['name']) hometeamname = hometeam['name']
-  var awayteam = teams['away']
-  if (awayteam['name']) awayteamname = awayteam['name']
-  teamNames['home'] = hometeamname;
-  teamNames['away'] = awayteamname;
-  // hometeamname = 'This team name is longer than 16 characters'
-  if(hometeamname.length > 16){
-  teamNames['home'] = hometeamname.substr(0, 13) + '...';
-  }
-  if(awayteamname.length > 16){
-  teamNames['away'] = awayteamname.substr(0, 13) + '...';
-  }
-  document.getElementById('homeTeamName').textContent = teamNames['home']
-  document.getElementById('awayTeamName').textContent = teamNames['away']
-  document.getElementById('fade_homeTeamName').textContent = teamNames['home']
-  document.getElementById('fade_awayTeamName').textContent = teamNames['away']
-  document.getElementById('period').textContent = match['status']['name']
-
-  center_text = capitalizeWords(match['status']['name'].split(" ")).join(' ')
-    document.getElementById('period').textContent = center_text
-    if(match['status']['name'] == 'Halftime') stopTime = 45 * 60;
-    if(match['status']['name'] == 'Not started') {
-      stopTime = 0 * 60;
-      document.getElementById('period').textContent = ''
-      document.getElementById('time').textContent = ''
+    // Team Name Setting
+    var teams = match['teams']
+    var hometeam = teams['home']
+    if (hometeam['name']) hometeamname = hometeam['name']
+    var awayteam = teams['away']
+    if (awayteam['name']) awayteamname = awayteam['name']
+    teamNames['home'] = hometeamname;
+    teamNames['away'] = awayteamname;
+    // hometeamname = 'This team name is longer than 16 characters'
+    if(hometeamname.length > 16){
+    teamNames['home'] = hometeamname.substr(0, 13) + '...';
     }
-    if(match['status']['name'] == 'Ended') stopTime = 90 * 60;
+    if(awayteamname.length > 16){
+    teamNames['away'] = awayteamname.substr(0, 13) + '...';
+    }
+    document.getElementById('homeTeamName').textContent = teamNames['home']
+    document.getElementById('awayTeamName').textContent = teamNames['away']
+    document.getElementById('fade_homeTeamName').textContent = teamNames['home']
+    document.getElementById('fade_awayTeamName').textContent = teamNames['away']
+    document.getElementById('period').textContent = match['status']['name']
 
-  // Score Setting
-  var result = match['result']
-  if (result['home']) homeScore = result['home']
-  if (result['away']) awayScore = result['away']
-  document.getElementById('score').textContent = homeScore + ' - ' + awayScore
-  document.getElementById('fade_score').textContent = homeScore + ' - ' + awayScore
+    center_text = capitalizeWords(match['status']['name'].split(" ")).join(' ')
+      document.getElementById('period').textContent = center_text
+      if(match['status']['name'] == 'Halftime') stopTime = 45 * 60;
+      if(match['status']['name'] == 'Not started') {
+        stopTime = 0 * 60;
+        document.getElementById('period').textContent = ''
+        document.getElementById('time').textContent = ''
+      }
+      if(match['status']['name'] == 'Ended') stopTime = 90 * 60;
 
-    if(match['matchstatus'] == 'upcoming'){ //Match End
+    // Score Setting
+    var result = match['result']
+    if (result['home']) homeScore = result['home']
+    if (result['away']) awayScore = result['away']
+    document.getElementById('score').textContent = homeScore + ' - ' + awayScore
+    document.getElementById('fade_score').textContent = homeScore + ' - ' + awayScore
+
+    if(match['matchstatus'] == 'result'){ //Match End
       setCenterFrame('Match End', homeScore + ' : ' + awayScore)
     }
 
@@ -1014,9 +1015,9 @@ function handleEventData(data) {
     }
 
     if(match['p'] == 31) {
-      setTimer = false
-      setCenterFrame('Halftime', homeScore + ':' + awayScore)
-    }
+    setTimer = false
+    setCenterFrame('Halftime', homeScore + ':' + awayScore)
+  }
   }
 
   var events = data['events'] || {};
@@ -1200,4 +1201,61 @@ function handleInfoData(data) {
         document.getElementById('fade_awayStripes').setAttribute('fill', '#'+ awayPlayerColor);
         document.getElementById('state_awayStripes').setAttribute('fill', '#'+ awayPlayerColor);
       }
+}
+
+function changeScreenSize() {
+  screenHeight = window.innerHeight
+  screenWidth = window.innerWidth
+  console.log('screenWidth: ', screenWidth)
+  console.log('screenHeight: ', screenHeight)
+
+  document.getElementById('scale').setAttribute('transform', 'scale(1.5)')
+  document.getElementById('svg').setAttribute('width', 750 * 1.5)
+  document.getElementById('svg').setAttribute('height', 430 * 1.5)
+  if(screenWidth < 1150 || screenHeight < 660){
+    document.getElementById('scale').setAttribute('transform', 'scale(1.3)')
+    document.getElementById('svg').setAttribute('width', 750 * 1.3)
+    document.getElementById('svg').setAttribute('height', 430 * 1.3)
+  } 
+  if(screenWidth < 1000 || screenHeight < 570){
+    document.getElementById('scale').setAttribute('transform', 'scale(1.1)')
+    document.getElementById('svg').setAttribute('width', 750 * 1.1)
+    document.getElementById('svg').setAttribute('height', 430 * 1.1)
+  } 
+  if(screenWidth < 850 || screenHeight < 480){
+    document.getElementById('scale').setAttribute('transform', 'scale(1)')
+    document.getElementById('svg').setAttribute('width', 750 * 1)
+    document.getElementById('svg').setAttribute('height', 430 * 1)
+  } 
+  if(screenWidth < 780 || screenHeight < 450){
+    document.getElementById('scale').setAttribute('transform', 'scale(0.8)')
+    document.getElementById('svg').setAttribute('width', 750 * 0.8)
+    document.getElementById('svg').setAttribute('height', 430 * 0.8)
+  } 
+  if(screenWidth < 620 || screenHeight < 350){
+    document.getElementById('scale').setAttribute('transform', 'scale(0.6)')
+    document.getElementById('svg').setAttribute('width', 750 * 0.6)
+    document.getElementById('svg').setAttribute('height', 430 * 0.6)
+  } 
+  if(screenWidth < 470 || screenHeight < 280){
+    document.getElementById('scale').setAttribute('transform', 'scale(0.5)')
+    document.getElementById('svg').setAttribute('width', 750 * 0.5)
+    document.getElementById('svg').setAttribute('height', 430 * 0.5)
+  } 
+  if(screenWidth < 400 || screenHeight < 230){
+    document.getElementById('scale').setAttribute('transform', 'scale(0.4)')
+    document.getElementById('svg').setAttribute('width', 750 * 0.4)
+    document.getElementById('svg').setAttribute('height', 430 * 0.4)
+  } 
+  if(screenWidth < 320 || screenHeight < 190){
+    document.getElementById('scale').setAttribute('transform', 'scale(0.3)')
+    document.getElementById('svg').setAttribute('width', 750 * 0.3)
+    document.getElementById('svg').setAttribute('height', 430 * 0.3)
+  } 
+  if(screenWidth < 250 || screenHeight < 150){
+    document.getElementById('scale').setAttribute('transform', 'scale(0.2)')
+    document.getElementById('svg').setAttribute('width', 750 * 0.2)
+    document.getElementById('svg').setAttribute('height', 430 * 0.2)
+  } 
+
 }
