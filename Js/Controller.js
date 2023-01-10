@@ -1,6 +1,7 @@
 var socket;
 
 var currentState = 0
+var isLimitedCov = false;
 
 var updated_uts1 = 0, updated_uts = 0
 var currentTime, matchStartDate;
@@ -66,7 +67,6 @@ function countdown() {
     var seconds1 = Math.floor(currentTime)
     var minute1 = Math.floor(seconds1 / 60)
     var second1 = seconds1 % 60
-    console.log('seconds1: ', seconds1)
     document.getElementById('time').textContent =
       Math.floor(minute1 / 10) +
       '' +
@@ -86,6 +86,9 @@ function countdown() {
       setCenterFrame('Not Started', days + 'D ' + hour + 'H ' + minute + 'M ' + second + 'S')
     }
 
+    if(isLimitedCov){
+      setCenterFrame('Limited Covarage', homeScore + ' - ' + awayScore)
+    }
     //every 10ms
     time += timeInterval
     if (currentState == 0) {
@@ -137,7 +140,7 @@ function load() {
   //getMatchJsonData()
   countdown()
 
-	socket=new WebSocket("ws://62.112.8.78:9680");
+	socket=new WebSocket("wss://gamecast.betdata.pro:8443");
 	socket.onopen=function(e) {
 		//socket.send(JSON.stringify({r:"authenticate", a:{key:"*******"}}));
 		socket.send(JSON.stringify({r:"subscribe_event", a:{id:eventId}}));
@@ -900,12 +903,15 @@ function setCenterFrame(title, content) {
   document.getElementById('center_rect').setAttribute('fill-opacity', 0.5)
   center_text = capitalizeWords(title.split(" ")).join(' ')
   document.getElementById('center_text').textContent = center_text
+  titleWidth = document.getElementById('center_text').getBBox().width + 40
   document.getElementById('center_rect').setAttribute('height', 140)
   document.getElementById('bottom_text').textContent = content
   document.getElementById('ball').setAttribute('x', 100000)
   document.getElementById('ball').setAttribute('y', 100000)
   document.getElementById('ball_shadow').setAttribute('cx', 100000)
   document.getElementById('ball_shadow').setAttribute('cy', 100000)
+  document.getElementById('center_rect').setAttribute('width', max(290, titleWidth))
+  document.getElementById('center_rect').setAttribute('x', 475 - max(290, titleWidth) / 2)
 }
 function setSideFrame() {
   // body...
@@ -950,6 +956,10 @@ function handleEventData(data) {
   var match = data['match']
 
   if (match) {
+    if(match['coverage']['lmtsupport'] < 3 && match['p'] < 10 &&  match['p'] >0){
+      isLimitedCov = true
+    }
+    else isLimitedCov = false
     setTimer = true
     ptime = match['ptime'] * 1000 - 45 * 60 * 1000 * (match['p'] - 1) - 148 * 1000
     if(match['p'] == 0) setTimer = false
