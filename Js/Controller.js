@@ -154,7 +154,7 @@ function load() {
 			handleEventData(data.d);
 		}
 	};
-
+  document.getElementById('link').setAttribute('href', '../Soccer-2D/index.html?eventId=' + eventId)
 }
 function bounceBall() {
   tt = t
