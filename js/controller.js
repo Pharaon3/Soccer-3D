@@ -1,4 +1,5 @@
 var socket;
+var match
 
 var currentState = 0
 var isLimitedCov = false;
@@ -953,7 +954,7 @@ function handleEventData(data) {
     handleInfoData(data);
   }
 
-  var match = data['match']
+  match = data['match']
 
   if (match) {
     if(match['coverage']['lmtsupport'] < 3 && match['p'] < 10 &&  match['p'] >0){
