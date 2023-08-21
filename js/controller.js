@@ -1,6 +1,22 @@
 var socket;
 var match
-
+let goalText = [
+  "goal",
+  "goall",
+  "goaall",
+  "goaalll",
+  "gooaalll",
+  "gooaaalll",
+  "gooaaallll",
+  "goooaaallll",
+  "goooaaaallll",
+  "goooaaaalllll",
+  "goooaaaallllll",
+  "goooaaaaallllll",
+  "goooaaaaalllllll",
+  "gooooaaaaalllllll"
+]
+var goalCount = -1;
 var currentState = 0
 var isLimitedCov = false;
 
@@ -116,6 +132,16 @@ function countdown() {
       drawTrack()
       showState()
     }
+  if(gameState[currentState]["type"] == "goal" && goalCount > -1){
+    goal(Math.min(Math.floor(goalCount / 3), 13), teamNames[gameState[currentState]['team']])
+    goalCount ++;    
+    $("#center_text").attr("font-size", 42);
+    document.getElementById('holder').textContent = "";
+    $("#Ball_Track_Begin").css("display", "none");
+  } else {
+    $("#center_text").attr("font-size", 38);
+    $("#Ball_Track_Begin").css("display", "block");
+  }
     
   }, timeInterval)
 }
@@ -597,18 +623,8 @@ function showState() {
       setCenterFrame(gameState[currentState]['name'], teamNames[gameState[currentState]['team']])
     }
     if(gameState[currentState]['type'] == 'goal'){
-      showAction()
-      if(isGoal == 1){
-        document.getElementById('score-fade-out').setAttribute('opacity', 1);
-        if(t < 0.5){
-          if(gameState[currentState]['team'] == 'home') document.getElementById('fade_score').textContent = homeScore - 1 + ' - ' + awayScore
-          if(gameState[currentState]['team'] == 'away') document.getElementById('fade_score').textContent = homeScore + ' - ' + awayScore - 1
-        }
-      }
-      if(isGoal == 2){
-        document.getElementById('score-fade-out').setAttribute('opacity', 1 - t);
-      }
-    }      
+      if(goalCount == -1) goalCount = 0;
+    } else goalCount = -1;
     if(gameState[currentState]['type'] == 'substitution'){
       document.getElementById('substitutionOut').setAttribute('fill-opacity', 0.5)
       document.getElementById('substitutionIn').setAttribute('fill-opacity', 0.5)
@@ -914,6 +930,23 @@ function setCenterFrame(title, content) {
   document.getElementById('center_rect').setAttribute('width', max(290, titleWidth))
   document.getElementById('center_rect').setAttribute('x', 475 - max(290, titleWidth) / 2)
 }
+function goal(goalCount, content) {
+  document.getElementById('ballState').textContent = ''
+  document.getElementById('actionBoard').setAttribute('height', 0)
+  document.getElementById('stateBoardLine').setAttribute('stroke-opacity', 0)
+  document.getElementById('center_rect').setAttribute('fill-opacity', 0.5)
+  center_text = capitalizeWords(goalText[goalCount].split(" ")).join(' ')
+  document.getElementById('center_text').textContent =center_text;
+  titleWidth = document.getElementById('center_text').getBBox().width + 40
+  document.getElementById('center_rect').setAttribute('height', 140)
+  document.getElementById('bottom_text').textContent = content
+  document.getElementById('ball').setAttribute('x', 100000)
+  document.getElementById('ball').setAttribute('y', 100000)
+  document.getElementById('ball_shadow').setAttribute('cx', 100000)
+  document.getElementById('ball_shadow').setAttribute('cy', 100000)
+  document.getElementById('center_rect').setAttribute('width', max(290, titleWidth))
+  document.getElementById('center_rect').setAttribute('x', 475 - max(290, titleWidth) / 2)
+}
 function setSideFrame() {
   // body...
 }
@@ -1046,6 +1079,7 @@ function handleEventData(data) {
     event['type'] != 'ballcoordinates' &&
     event['type'] != 'goal_kick' &&
     event['type'] != 'corner' &&
+    event['type'] != 'goal' &&
     event['type'] != 'possible_event'
   ) {
     newEvents.push(event)
@@ -1079,6 +1113,20 @@ function handleEventData(data) {
     }
     } else
     newEvents.push(event)
+  }
+  if (event['type'] == 'goal') {
+    let eventGoal = {...event};
+    let eventGoal1 = {...event};
+    let eventGoal2 = {...event};
+    let eventGoal3 = {...event};
+    eventGoal["count"] = 0;
+    newEvents.push(eventGoal);
+    eventGoal1["count"] = 1;
+    newEvents.push(eventGoal1);
+    eventGoal2["count"] = 2;
+    newEvents.push(eventGoal2);
+    eventGoal3["count"] = 3;
+    newEvents.push(eventGoal3);
   }
   if (event['type'] == 'goal_kick') {
     if (event['team'] == 'home') {
